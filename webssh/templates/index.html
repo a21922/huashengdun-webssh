@@ -43,18 +43,18 @@
       <form id="connect" action="" method="post" enctype="multipart/form-data"{% if debug %} novalidate{% end %}>
         <div class="row">
           <div class="col">
-            <label for="Hostname">主机名称</label>
+            <label for="Hostname">主机IP</label>
             <input class="form-control" type="text" id="hostname" name="hostname" value="" required>
           </div>
           <div class="col">
             <label for="Port">端口</label>
-            <input class="form-control" type="number" id="port" name="port" placeholder="22" value="" min=1 max=65535>
+            <input class="form-control" type="number" id="port" name="port" placeholder="22" value="22" min=1 max=65535>
           </div>
         </div>
         <div class="row">
           <div class="col">
             <label for="Username">用户名</label>
-            <input class="form-control" type="text" id="username" name="username" placeholder="root" value="" required>
+            <input class="form-control" type="text" id="username" name="username" placeholder="root" value="root" required>
           </div>
           <div class="col">
             <label for="Password">密码</label>
