@@ -47,10 +47,20 @@
       .connection-item button {
         margin-left: 10px;
       }
+
+      .login-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
     </style>
   </head>
   <body>
     <div id="waiter" style="display: none"> Connecting ... </div>
+
+    <div class="login-container">
+      <button id="loginBtn" class="btn btn-primary">登录</button>
+    </div>
 
     <div class="container form-container" style="display: none">
       <form id="connect" action="" method="post" enctype="multipart/form-data"{% if debug %} novalidate{% end %}>
@@ -207,6 +217,18 @@
 
           // Proceed with form submission
           this.submit();
+        });
+
+        // Login button click event
+        $('#loginBtn').click(function() {
+          // Prompt user to login (this is a placeholder, replace with actual login logic)
+          const user = prompt("请输入用户名:");
+          if (user) {
+            $('#loginBtn').text(`欢迎, ${user}`);
+            $('.form-container').show();
+            $('#saved-connections').show();
+            loadConnections();
+          }
         });
       });
     </script>
