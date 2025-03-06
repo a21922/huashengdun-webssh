@@ -36,6 +36,7 @@
       {% end %}
       #saved-connections {
         margin-top: 20px;
+        display: none;
       }
 
       .connection-item {
@@ -105,11 +106,6 @@
         <button type="button" class="btn btn-info" id="sshlinkBtn">SSH 链接</button>
         <div id="sshlink"></div>
       </form>
-    </div>
-
-    <div class="container">
-      <div id="status" style="color: red;"></div>
-      <div id="terminal"></div>
     </div>
 
     <div class="container" id="saved-connections">
@@ -221,13 +217,14 @@
 
         // Login button click event
         $('#loginBtn').click(function() {
-          // Prompt user to login (this is a placeholder, replace with actual login logic)
-          const user = prompt("请输入用户名:");
-          if (user) {
-            $('#loginBtn').text(`欢迎, ${user}`);
+          const password = prompt("请输入密码:");
+          if (password === 'ayt21922') {
+            $('#loginBtn').text(`已登录`);
             $('.form-container').show();
             $('#saved-connections').show();
             loadConnections();
+          } else {
+            alert("密码错误！");
           }
         });
       });
