@@ -13,8 +13,8 @@ setup(
     description='Web based ssh client',
     long_description=long_description,
     author='Shengdun Hua',
-    author_email='webmaster0115@gmail.com',
-    url='https://github.com/huashengdun/webssh',
+    author_email='aayt@qq.com',
+    url='https://github.com/a21922/huashengdun-webssh',
     packages=['webssh'],
     entry_points='''
     [console_scripts]
