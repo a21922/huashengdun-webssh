@@ -34,71 +34,36 @@
         font-family: '{{ font.family }}';
       }
       {% end %}
-      #saved-connections {
-        margin-top: 20px;
-        display: none;
-      }
-
-      .connection-item {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-      }
-
-      .connection-item button {
-        margin-left: 10px;
-      }
-
-      .login-container {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-      }
-
-      .connections-list {
-        float: left;
-        width: 250px;
-        margin-right: 20px;
-      }
     </style>
   </head>
   <body>
     <div id="waiter" style="display: none"> Connecting ... </div>
 
-    <div class="login-container">
-      <button id="loginBtn" class="btn btn-primary">登录</button>
-    </div>
-
-    <div class="connections-list" id="saved-connections">
-      <h3>已保存的连接</h3>
-      <div id="connections-list"></div>
-    </div>
-
-    <div class="container form-container" style="display: none; margin-left: 270px;">
+    <div class="container form-container" style="display: none">
       <form id="connect" action="" method="post" enctype="multipart/form-data"{% if debug %} novalidate{% end %}>
         <div class="row">
           <div class="col">
-            <label for="Hostname">主机IP</label>
+            <label for="Hostname">hostname</label>
             <input class="form-control" type="text" id="hostname" name="hostname" value="" required>
           </div>
           <div class="col">
-            <label for="Port">端口</label>
-            <input class="form-control" type="number" id="port" name="port" placeholder="22" value="22" min=1 max=65535>
+            <label for="Port">port</label>
+            <input class="form-control" type="number" id="port" name="port" placeholder="22" value="" min=1 max=65535>
           </div>
         </div>
         <div class="row">
           <div class="col">
-            <label for="Username">用户名</label>
+            <label for="Username">username</label>
             <input class="form-control" type="text" id="username" name="username" placeholder="root" value="" required>
           </div>
           <div class="col">
-            <label for="Password">密码</label>
+            <label for="Password">password</label>
             <input class="form-control" type="password" id="password" name="password" value="">
           </div>
         </div>
         <div class="row">
           <div class="col">
-            <label for="PrivateKey">Private Key</label>
+            <label for="Username">Private Key</label>
             <input class="form-control" type="file" id="privatekey" name="privatekey" value="">
           </div>
           <div class="col">
@@ -126,115 +91,5 @@
     <script src="static/js/xterm.min.js"></script>
     <script src="static/js/xterm-addon-fit.min.js"></script>
     <script src="static/js/main.js"></script>
-    <script>
-      $(document).ready(function() {
-        // Load saved SSH connections on page load
-        function loadConnections() {
-          if (localStorage.getItem('ssh_connections')) {
-            const connections = JSON.parse(localStorage.getItem('ssh_connections'));
-            $('#connections-list').empty();
-            connections.forEach((conn, index) => {
-              $('#connections-list').append(`
-                <div class="connection-item" data-index="${index}">
-                  <strong>主机名称:</strong> ${conn.hostname} <br>
-                  <strong>主机IP:</strong> ${conn.hostip} <br>
-                  <strong>端口:</strong> ${conn.port} <br>
-                  <strong>用户名:</strong> ${conn.username} <br>
-                  <button class="btn btn-primary connect-btn">连接</button>
-                  <button class="btn btn-secondary edit-btn">编辑</button>
-                  <button class="btn btn-danger delete-btn">删除</button>
-                </div>
-              `);
-            });
-          }
-        }
-
-        loadConnections();
-
-        // Connect button click event
-        $('#connections-list').on('click', '.connect-btn', function() {
-          const index = $(this).closest('.connection-item').data('index');
-          const connections = JSON.parse(localStorage.getItem('ssh_connections'));
-          const conn = connections[index];
-          $('#hostname').val(conn.hostname);
-          $('#hostip').val(conn.hostip);
-          $('#port').val(conn.port);
-          $('#username').val(conn.username);
-          $('#password').val(conn.password);
-          $('#connect').submit();
-        });
-
-        // Edit button click event
-        $('#connections-list').on('click', '.edit-btn', function() {
-          const index = $(this).closest('.connection-item').data('index');
-          const connections = JSON.parse(localStorage.getItem('ssh_connections'));
-          const conn = connections[index];
-          $('#hostname').val(conn.hostname);
-          $('#hostip').val(conn.hostip);
-          $('#port').val(conn.port);
-          $('#username').val(conn.username);
-          $('#password').val(conn.password);
-          $('#privatekey').val(conn.privatekey);
-          $('#passphrase').val(conn.passphrase);
-          connections.splice(index, 1); // Remove the current connection for editing
-          localStorage.setItem('ssh_connections', JSON.stringify(connections));
-          loadConnections();
-        });
-
-        // Delete button click event
-        $('#connections-list').on('click', '.delete-btn', function() {
-          const index = $(this).closest('.connection-item').data('index');
-          const connections = JSON.parse(localStorage.getItem('ssh_connections'));
-          connections.splice(index, 1);
-          localStorage.setItem('ssh_connections', JSON.stringify(connections));
-          loadConnections();
-        });
-
-        // Check if there are saved SSH connections
-        if (localStorage.getItem('ssh_connections')) {
-          const connections = JSON.parse(localStorage.getItem('ssh_connections'));
-          const lastConnection = connections[connections.length - 1];
-          $('#hostname').val(lastConnection.hostname);
-          $('#hostip').val(lastConnection.hostip);
-          $('#port').val(lastConnection.port);
-          $('#username').val(lastConnection.username);
-          $('#password').val(lastConnection.password);
-          $('#privatekey').val(lastConnection.privatekey);
-          $('#passphrase').val(lastConnection.passphrase);
-        }
-
-        $('#connect').submit(function(e) {
-          e.preventDefault();
-          const hostname = $('#hostname').val();
-          const hostip = $('#hostip').val();
-          const port = $('#port').val();
-          const username = $('#username').val();
-          const password = $('#password').val();
-          const privatekey = $('#privatekey').val();
-          const passphrase = $('#passphrase').val();
-
-          // Save the connection details
-          let connections = localStorage.getItem('ssh_connections') ? JSON.parse(localStorage.getItem('ssh_connections')) : [];
-          connections.push({ hostname, hostip, port, username, password, privatekey, passphrase });
-          localStorage.setItem('ssh_connections', JSON.stringify(connections));
-
-          // Proceed with form submission
-          this.submit();
-        });
-
-        // Login button click event
-        $('#loginBtn').click(function() {
-          const password = prompt("请输入密码:");
-          if (password === 'ayt21922') {
-            $('#loginBtn').text(`已登录`);
-            $('.form-container').show();
-            $('#saved-connections').show();
-            loadConnections();
-          } else {
-            alert("密码错误！");
-          }
-        });
-      });
-    </script>
   </body>
 </html>
